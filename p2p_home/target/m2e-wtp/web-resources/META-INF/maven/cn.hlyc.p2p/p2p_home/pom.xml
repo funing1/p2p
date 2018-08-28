@@ -8,8 +8,6 @@
   <artifactId>p2p_home</artifactId>
   <packaging>war</packaging>
   
-  
-  
   <build>
 		<plugins>
 			<plugin>

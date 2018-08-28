@@ -1,0 +1,8 @@
+cn\hlyc\domain\product\ProductEarningRate.class
+cn\hlyc\domain\city\City.class
+cn\hlyc\domain\product\Product.class
+cn\hlyc\domain\bankCardInfo\Bank.class
+cn\hlyc\domain\bankCardInfo\BankCardInfo.class
+cn\hlyc\domain\userAccount\UserAccountModel.class
+cn\hlyc\domain\user\UserModel.class
+cn\hlyc\domain\admin\AdminModel.class

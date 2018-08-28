@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
+encoding//src/main/webapp/views/home.html=UTF-8
+encoding//src/main/webapp/views/login.html=UTF-8
+encoding//src/main/webapp/views/product_manage=UTF-8
+encoding//src/main/webapp/views/product_manage/product.html=UTF-8
+encoding//src/main/webapp/views/product_manage/product_add.html=UTF-8
+encoding//src/main/webapp/views/product_manage/product_edit.html=UTF-8
+encoding//src/main/webapp/views/user_manager/userList.html=UTF-8
+encoding//src/main/webapp/views/user_manager/user_add.html=UTF-8
+encoding//src/main/webapp/views/user_manager/user_edit.html=UTF-8
+encoding//src/test/java=UTF-8

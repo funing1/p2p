@@ -1,0 +1,8 @@
+cn\hlyc\dao\bank\IBankDAO.class
+cn\hlyc\dao\admin\AdminDAO.class
+cn\hlyc\dao\user\IUserDAO.class
+cn\hlyc\dao\product\IProductRateDAO.class
+cn\hlyc\dao\userAccount\IUserAccountDAO.class
+cn\hlyc\dao\product\IProductDAO.class
+cn\hlyc\dao\city\ICityDAO.class
+cn\hlyc\dao\bankCardInfo\IBankCardInfoDAO.class

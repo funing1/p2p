@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 不用重启服务器 -->
+	<constant name="struts.i18n.reload" value="true" />
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 表单样式 -->
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- 国际化文件 -->
+	<constant name="struts.custom.i18n.resources" value="messages" />
+	<!-- 动态方法调用 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect"
+		value="true" />
+
+	<constant name="struts.devMode" value="true" />
+
+	<package name="base" extends="json-default,struts-default">
+		<!-- 这里可以设置一些全局的返回值映射关系等 -->
+	</package>
+	
+	<package name="Struts2" extends="struts-default" namespace="/wj">
+
+		<action name="uploads" class="cn.hlyc.action.upload.UploadAction" method="upload">
+
+			<!-- 指定（限制）上传文件的类型，定义局部拦截器，修改默认拦截器的属性 "fileUpload.maximumSize" ：限制上传最大的文件大小。 
+				"fileUpload.allowedTypes"：允许上传文件的类型。 "fileUpload.allowedExtensions"：允许上传文件的可扩展文件类型。 -->
+			<interceptor-ref name="defaultStack">
+				<param name="fileUpload.maximumSize">500000000</param>
+				<param name="fileUpload.allowedTypes">image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/png</param>
+				 
+			</interceptor-ref>
+
+		</action>
+		
+		<action name="cut" class="cn.hlyc.action.upload.UploadAction" method="cut"></action>
+	</package>
+	
+	
+	
+</struts>

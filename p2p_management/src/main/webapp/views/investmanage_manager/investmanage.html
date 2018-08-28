@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+#jiaoyi {
+	font-size: 50px;
+}
+
+#body {
+	padding-top: 30px;
+}
+
+#table1 {
+	font-size: 30px;
+}
+
+#tr1 {
+	font-size: 20px;
+}
+
+#div2 {
+	margin-top: 200px;
+	float: right;
+}
+</style>
+
+</head>
+<body>
+	<div id="body">
+		<div>
+			<span id="jiaoyi">投资记录查询</span>
+			<hr>
+			<hr>
+			<span>用户名:</span><input type="text" name="username"
+				ng-model="username" /> <span id="xzrq">选择日期:</span>&nbsp;&nbsp;<input
+				size="20" type="text" id="datetimeStart" readonly
+				class="form_datetime" ng-model="datetimeStart"> -- <input
+				size="20" type="text" id="datetimeEnd" readonly
+				class="form_datetime" ng-model="datetimeEnd">&nbsp;&nbsp;&nbsp;&nbsp;<input
+				type="button" value="查询" ng-click="chaxun();" />
+		</div>
+		<br> <br>
+
+
+		<div class="area_content area_table">
+			<hr>
+			<hr>
+			<table width="86%" class="table-data table-row tc" id="table2">
+				<tr id="tr1">
+					<td>序号</td>
+					<td>投资交易时间</td>
+					<td>用户名</td>
+					<td>产品名称</td>
+					<td>投资期限</td>
+					<td>利率</td>
+					<td>投资金额</td>
+					<td>是否复投</td>
+					<td>购买方案</td>
+					<td>操作</td>
+				</tr>
+
+				<tr ng-repeat="x in info">
+					<td>{{$index+1}}</td>
+					<td>{{x.buyTime}}</td>
+					<td>{{x.username}}</td>
+					<td>{{x.productName}}</td>
+					<td>{{x.pDeadline}}月</td>
+					<td>{{x.pExpectedAnnualIncome}}<span> ％</span></td>
+					<td>{{x.pAmount}}元</td>
+					<td ng-if="x.isRepeatInvest == '1'">否</td>
+					<td ng-if="x.isRepeatInvest == '0'">是</td>
+					<td ng-if="x.pProductId == '1'">月存计划</td>
+					<td ng-if="x.pProductId == '2'">月乘计划</td>
+					<td ng-if="x.pProductId == '3'">月取计划</td>
+					<td><a href="javascript:;" ng-click="viewProductById($index);"
+						class="c_blue">投资详情</a>
+				</tr>
+			</table>
+		</div>
+
+		<div id="div2">
+			<table class="table-data table-row tc">
+				<tr>
+					<td>合计条数</td>
+					<td>投资金额总计</td>
+				</tr>
+				<tr>
+					<td>{{size}}</td>
+					<td>{{zmoney}}</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- Modal -->
+		<div id="myModal_b" class="modal fade" role="dialog"
+			ng-init="recordList=true" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+
+			<div class="modal-dialog" ng-if="!recordList">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button class="close" ng-click="hide()">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h3 class="modal-title">交易详细信息</h3>
+					</div>
+					<div class="modal-body">
+						<table class="table-data table-row tc">
+							<tr>
+								<td>购买用户名</td>
+								<td>{{jyindex.username}}</td>
+							</tr>
+							<tr>
+								<td>购买方案</td>
+								<td ng-if="jyindex.pProductId == '1'">月存计划</td>
+								<td ng-if="jyindex.pProductId == '2'">月乘计划</td>
+								<td ng-if="jyindex.pProductId == '3'">月取计划</td>
+							</tr>
+							<tr>
+								<td>投资申请日期</td>
+								<td>{{jyindex.buyTime}}</td>
+							</tr>
+							<tr>
+								<td>投资日期</td>
+								<td>{{jyindex.pDeadline}}月</td>
+							</tr>
+							<tr>
+								<td>投资产品</td>
+								<td>{{jyindex.productName}}</td>
+							</tr>
+							<tr>
+								<td>投资本金</td>
+								<td>{{jyindex.pAmount}}元</td>
+							</tr>
+							<tr>
+								<td>利率</td>
+								<td>{{jyindex.pExpectedAnnualIncome}}<span> ％</span></td>
+							</tr>
+
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" ng-click="hide()">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript">
+	$("#datetimeStart").datetimepicker({
+		format : "yyyy-mm-dd hh:ii:ss",
+		startView : 0, //首先显示的视图, 0当前时的分钟区间 1该天的每时 2该月的每天 3该年的每月 4年视图
+		minView : 0,
+		maxView : 4,
+		todayBtn : true, //是否显示今日按钮
+		/*startDate: new Date("2017/6/15"),  //开始时间
+		endDate: new Date("2017/7/15"),*///结束时间
+		autoclose : true, //当选择一个日期之后是否立即关闭此日期时间选择器。
+		language : 'zh-CN'
+
+	}).on(
+			"click",
+			function() {
+				$("#datetimeStart").datetimepicker("setEndDate",
+						$("#datetimeEnd").val())
+			});
+	$("#datetimeEnd").datetimepicker({
+		format : "yyyy-mm-dd hh:ii:ss",
+		startView : 4, //首先显示的视图, 0当前时的分钟区间 1该天的每时 2该月的每天 3该年的每月 4年视图
+		minView : 0,
+		maxView : 4,
+		todayBtn : true, //是否显示今日按钮
+		/*startDate: new Date("2017/6/15"),  //开始时间
+		endDate: new Date("2017/7/15"),*///结束时间
+		autoclose : true, //当选择一个日期之后是否立即关闭此日期时间选择器。
+		language : 'zh-CN'
+	}).on(
+			"click",
+			function() {
+				$("#datetimeEnd").datetimepicker("setStartDate",
+						$("#datetimeStart").val())
+			});
+</script>
+</html>

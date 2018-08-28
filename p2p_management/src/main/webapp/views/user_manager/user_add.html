@@ -1,0 +1,103 @@
+<div id="mainarea">
+	<div class="loc">用户及交易管理 &gt; 新增用户</div>
+	<!--loc end-->
+	<div class="container">
+		<!--area_block-->
+		<div class="area_block">
+			<div class="area_title">
+				<span class="ico ico-edit">&nbsp;</span>
+				<h3>新增用户信息</h3>
+			</div>
+			<div class="area_content area_table">
+				<table width="100%" class="table-edit">
+					<tr>
+								<th width="21%" class="tr">用户名<font color="red" size="4">*</font></th>
+								<td width="79%">
+								<input type="text" class=""
+									ng-class="{'input-text': true,'error-text': username_error_msg}"
+									placeholder="请输入昵称,包含数字,字母,下划线,非纯数字" ng-model="username"
+									ng-blur="yzusername()" onkeyup="value=value.replace(/\s/g,'')"
+									maxlength="14">
+									<span
+									ng-class="{'ico-correct': username_is_pass}"></span></td>
+							</tr>
+							<tr>
+								<th></th>
+								<td><div class="error_tips" ng-bind="username_error_msg"></div></td>
+							</tr>
+							<tr>
+								<th class="tr">手机号码<font color="red" size="4">*</font></th>
+								<td>
+								<input type="text"
+									ng-class="{'input-text': true,'error-text':phone_error_msg}"
+									placeholder="请输入手机号码" ng-model="phone" ng-blur="yzphone()">
+									<span ng-class="{'ico-correct': phone_is_pass}"></span></td>
+							</tr>
+							<tr>
+								<th></th>
+								<td><div class="error_tips" ng-bind="phone_error_msg"></div></td>
+							</tr>
+							<tr>
+								<th class="tr">密码<font color="red" size="4">*</font></th>
+								<td><input type="password" class="input-text"
+									placeholder="密码为8-16位数字或字母组合" ng-model="password"
+									ng-blur="yzpassword()"></td>
+							</tr>
+							<tr>
+								<th></th>
+								<td><div class="error_tips">
+										<p class="pwd_tips_bar pwd_tips_bg{{strong}}"
+											ng-hide="pwd_error_msg"></p>
+										{{pwd_error_msg}}
+									</div></td>
+							</tr>
+							<tr>
+								<th class="tr">密码确认<font color="red" size="4">*</font></th>
+								<td><input type="password" class="input-text"
+									ng-model="confirm_password" ng-blur="yzconfirm_password()"
+									placeholder="请重复输入登录密码"></td>
+							</tr>
+							<tr>
+								<th></th>
+								<td><div class="error_tips" ng-bind="repwd_error_msg"></td>
+							</tr>
+							<tr>
+								<th class="tr">验证码<font color="red" size="4">*</font></th>
+								<td>
+								<input type="text" style="width: 115px;"
+									ng-model="captcha" ng-blur="authCaptcha()">&nbsp;&nbsp;&nbsp;
+									<a href="javascript:void(0);" class="yzm"><img
+										ng-src="{{img_src}}" ng-click="refresh()" alt="验证码"></a>&nbsp;&nbsp;
+									<a href="javascript:void(0);" class="reload"
+									ng-click="refresh()">刷新</a></td>
+							</tr>
+							<tr>
+								<th></th>
+								<td><div class="error_tips" ng-bind="code_error_msg"></div></td>
+							</tr>
+							
+							
+							<tr>
+								<th>&nbsp;</th>
+								<td class="f12"><input name="checkbox" type="checkbox"
+									ng-checked="isAgree" ng-model="isAgree"> 我同意《<a href=""
+									target="_blank" class="c_blue">服务协议</a>》</td>
+							</tr>
+							<tr>
+								<th></th>
+								<td><div class="error_tips" ng-show="!isAgree">如果不同意服务协议，将无法完成注册！</div></td>
+							</tr>
+									
+				</table>
+			</div>
+			<div class="area_foot tc">
+				<button type="button" class="button button-cancel"
+					ng-click="cancel()">&nbsp;取消&nbsp;</button>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<button type="button" class="button button-affirm"
+					ng-click="save()">&nbsp;提交&nbsp;</button>
+			</div>
+		</div>
+		<!--area_block end-->
+	</div>
+</div>

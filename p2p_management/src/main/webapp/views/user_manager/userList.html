@@ -1,0 +1,242 @@
+<div id="mainarea">
+	<div class="loc">用户及交易管理 &gt; 用户信息管理</div>
+	<!--loc end-->
+
+	<div class="container">
+		<div class="area_block">
+			<div class="area_thead">
+				<button type="button" class="button" ui-sref="home.UserAdd">新增用户</button>
+			</div>
+		</div>
+		<!--area_block-->
+		<div class="area_block">
+			<div class="area_title">
+				<span class="ico ico-edit">&nbsp;</span>
+				<h3>用户列表信息</h3>
+			</div>
+			<div class="area_content area_table">
+				<table width="100%" class="table-data table-row tc">
+					<tr>
+						<th>序号</th>
+						<th>用户登录名</th>
+						<th>注册时间</th>
+						<th>真实姓名</th>
+						<th>手机号码</th>
+						<th>邮箱地址</th>
+						<th>安全等级</th>
+						<th>操作</th>
+					</tr>
+					<tr ng-repeat="x in info">
+						<td>{{$index+1}}</td>
+						<td>{{x.username}}</td>
+						<td>{{x.registerTime}}</td>
+						<td ng-if="x.realNameStatus == 1">{{x.realName}}</td>
+						<td ng-if="x.realNameStatus != 1">未验证</td>
+						<td >{{x.phone}}</td>					
+						<td ng-if="x.emailStatus == 1">{{x.email}}</td>
+						<td ng-if="x.emailStatus != 1">未验证</td>
+						<td ng-if="x.realNameStatus+x.phoneStatus+x.emailStatus == 0">无</td>
+						<td ng-if="x.realNameStatus+x.phoneStatus+x.emailStatus == 1">弱</td>
+						<td ng-if="x.realNameStatus+x.phoneStatus+x.emailStatus == 2">中</td>
+						<td ng-if="x.realNameStatus+x.phoneStatus+x.emailStatus == 3">强</td>
+						<td><a href="javascript://" ng-click="viewUserById(x.id);"
+							class="c_blue">查看</a> <a href="javascript://"
+							ui-sref="home.userEdit({id:x.id})" class="c_blue">编辑</a>
+							<a href="javascript://" ng-show="isHide(x.id)"
+							ng-click="Del(x.id);" class="c_blue">删除</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!--area_block end-->
+	</div>
+</div>
+<!-- Modal -->
+<div id="myModal_b" class="modal fade" role="dialog"
+	ng-init="recordList=true" aria-labelledby="myModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" ng-if="recordList">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="hide()">×</button>
+				<h3 id="myModalLabel">修改记录</h3>
+			</div>
+			<div class="modal-body">
+				<p>
+					<span>产品编号:UX</span>
+				<table class="table-data table-row tc">
+					<tr>
+						<td>更新时间</td>
+						<td>修改ID</td>
+						<td>操作</td>
+					</tr>
+					<tr ng-repeat="record in modifyRecords">
+						<td>{{record.modifyTime}}</td>
+						<td>{{record.username}}</td>
+						<td><a href="javascript://" class="c_blue"
+							ng-click="viewDetailLog(record.logId)">查看</a></td>
+					</tr>
+				</table>
+				</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" ng-click="hide()">关闭</button>
+			</div>
+		</div>
+	</div>
+	<div class="modal-dialog" ng-if="!recordList">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" ng-click="hide()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h3 class="modal-title">用户详细信息</h3>
+			</div>
+			<div class="modal-body">
+				<table class="table-data table-row tc">
+					<tr>
+						<td>用户登录名</td>
+						<td>{{view.username}}</td>
+					</tr>
+					<tr>
+						<td>注册时间</td>
+						<td>{{view.registerTime}}</td>
+					</tr>
+					<tr>
+						<td>真实姓名</td>
+						<td ng-if="view.realNameStatus == 1">{{view.realName}}</td>
+						<td ng-if="view.realNameStatus != 1">未验证</td>
+					</tr>
+					<tr>
+						<td>手机号码</td>
+						<td ng-if="view.phoneStatus == 1">{{view.phone}}</td>
+						<td ng-if="view.phoneStatus != 1">未验证</td>
+					</tr>
+					<tr>
+						<td>邮箱地址</td>
+						<td ng-if="view.emailStatus == 1">{{view.email}}</td>
+						<td ng-if="view.emailStatus != 1">未验证</td>
+					</tr>
+					<tr>
+						<td>安全等级</td>
+						<td ng-if="view.realNameStatus+view.phoneStatus+view.emailStatus == 0">无</td>
+						<td ng-if="view.realNameStatus+view.phoneStatus+view.emailStatus == 1">弱</td>
+						<td ng-if="view.realNameStatus+view.phoneStatus+view.emailStatus == 2">中</td>
+						<td ng-if="view.realNameStatus+view.phoneStatus+view.emailStatus == 3">强</td>
+					</tr>					
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-default" ng-click="hide()">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="myModal_save" class="modal fade" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3 id="myModalLabel">利率列表</h3>
+			</div>
+			<div class="modal-body">
+				<p>
+					<span>产品名称:月存计划</span>
+				</p>
+				<p>
+					<span>期限：1月至36月</span>
+				</p>
+				<p>
+					<span>利率：按月设置</span>
+				</p>
+				<table class="table-data table-row tc">
+					<tr>
+						<td>月数</td>
+						<td>年利率</td>
+					</tr>
+					<tr ng-repeat="rate in rates">
+						<td>{{rate.month}}</td>
+						<td>{{rate.incomeRate}}</td>
+					</tr>
+				</table>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="myModal_multi" class="modal fade" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3 id="myModalLabel">利率列表</h3>
+			</div>
+			<div class="modal-body">
+				<p>
+					<span>产品名称:月乘计划</span>
+				</p>
+				<p>
+					<span>期限：1月至36月</span>
+				</p>
+				<p>
+					<span>利率：按月设置</span>
+				</p>
+				<table class="table-data table-row tc">
+					<tr>
+						<td>月数</td>
+						<td>年利率</td>
+					</tr>
+					<tr ng-repeat="rate in rates">
+						<td>{{rate.month}}</td>
+						<td>{{rate.incomeRate}}</td>
+					</tr>
+				</table>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="myModal_get" class="modal fade" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3 id="myModalLabel">利率列表</h3>
+			</div>
+			<div class="modal-body">
+				<p>
+					<span>产品名称:月取计划</span>
+				</p>
+				<p>
+					<span>期限：12月至36月</span>
+				</p>
+				<p>
+					<span>利率：按月设置</span>
+				</p>
+				<table class="table-data table-row tc">
+					<tr>
+						<td>月数</td>
+						<td>年利率</td>
+					</tr>
+					<tr ng-repeat="rate in rates">
+						<td>{{rate.month}}</td>
+						<td>{{rate.incomeRate}}</td>
+					</tr>
+				</table>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -7,7 +7,7 @@
   </parent>
   <artifactId>p2p_home</artifactId>
   <packaging>war</packaging>
-  
+<!-- sdfs sf张文武f -->
   <build>
 		<plugins>
 			<plugin>

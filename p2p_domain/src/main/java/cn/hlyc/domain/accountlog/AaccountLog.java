@@ -1,5 +1,5 @@
 package cn.hlyc.domain.accountlog;
-
+// 测试触发
 import java.util.Date;
 
 import javax.persistence.Column;

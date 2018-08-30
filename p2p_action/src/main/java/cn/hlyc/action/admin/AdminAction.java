@@ -16,7 +16,7 @@ import cn.hlyc.service.admin.IAdminService;
 @Namespace("/account")
 @Scope("prototype")
 public class AdminAction extends BaseAction {
-    //修改了
+    
 	//再次修改
 	@Autowired
 	private IAdminService adminService;

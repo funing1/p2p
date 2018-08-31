@@ -11,9 +11,9 @@ import org.apache.commons.lang.StringUtils;
 
 public class EmailUtils {
 	
-	//ºóÌ¨·şÎñÆ÷µØÖ·£º
+	//åå°æœåŠ¡å™¨åœ°å€ï¼š
 	private static String domainName="/config/EmailAuthentication.properties";
-	//ºóÌ¨·şÎñÆ÷µØÖ·
+	//åå°æœåŠ¡å™¨åœ°å€
 	private static String backgroundUrl="/config/config.properties";
 	
 	public  Properties getProperties() throws IOException {
@@ -38,9 +38,9 @@ public class EmailUtils {
 		return p;
 	}
 	/**
-	 * ÑéÖ¤ÓÊÏä
+	 * éªŒè¯é‚®ç®±
 	 * 
-	 * @param email  ÓÃ»§ÓÊÏä
+	 * @param email  ç”¨æˆ·é‚®ç®±
 	 * @return
 	 */
 	public static boolean checkEmail(String email) {
@@ -61,74 +61,74 @@ public class EmailUtils {
 			
 	}
 	/**
-	 * 	ÓÊ¼şÄÚÈİ
-	 * @param email ÓÃ»§ÓÊÏäºÅ
-	 * @param enc ¼ÓÃÜºóµÄÓÃ»§Id
-	 * @return    ·µ»ØÓÊÏäÀàÈİ
+	 * 	é‚®ä»¶å†…å®¹
+	 * @param email ç”¨æˆ·é‚®ç®±å·
+	 * @param enc åŠ å¯†åçš„ç”¨æˆ·Id
+	 * @return    è¿”å›é‚®ç®±ç±»å®¹
 	 */
 	public static String getMailCapacity(String email,String enc,String username){
 		
 		try {
 			if(!(StringUtils.isEmpty(email.trim()) && StringUtils.isEmpty(enc.trim()) && StringUtils.isEmpty(username.trim()))){
 				StringBuffer sb = new StringBuffer();
-				sb.append("Ç×°®µÄ"+username+",ÄúºÃ!");
+				sb.append("äº²çˆ±çš„"+username+",æ‚¨å¥½!");
 				sb.append("<br>");
 				sb.append("</br>");
-				sb.append("¸ĞĞ»Äú×¢²á£¬Äú½øĞĞÈÏÖ¤µÄÓÊÏäÕÊºÅÎª  "+email);
+				sb.append("æ„Ÿè°¢æ‚¨æ³¨å†Œï¼Œæ‚¨è¿›è¡Œè®¤è¯çš„é‚®ç®±å¸å·ä¸º  "+email);
 				sb.append("<br>");
 				sb.append("</br>");
-				sb.append("Çëµã»÷ÏÂÃæµÄÁ´½Ó¼´¿ÉÍê³É¼¤»î¡£");
+				sb.append("è¯·ç‚¹å‡»ä¸‹é¢çš„é“¾æ¥å³å¯å®Œæˆæ¿€æ´»ã€‚");
 				sb.append("<br>");
 				sb.append("</br>");
 				//String url = getUrl("home.url");
-				sb.append("<a href=\""+"http://localhost:8080/p2p_action/verification/emailactivation?us="+enc); //·şÎñÆ÷Â·¾¶ 
+				sb.append("<a href=\""+"http://localhost:8080/p2p_action/verification/emailactivation?us="+enc); //æœåŠ¡å™¨è·¯å¾„ 
 				sb.append("\">");
-				sb.append("µãÎÒµãÎÒ");// ·şÎñÆ÷Â·¾¶
+				sb.append("ç‚¹æˆ‘ç‚¹æˆ‘");// æœåŠ¡å™¨è·¯å¾„
 				sb.append("</a>");
 				return sb.toString();
 			}
 		} catch (Exception e) {
-			System.out.println("===========ÕâÀï³ö´íÁË==========");
+			System.out.println("===========è¿™é‡Œå‡ºé”™äº†==========");
 			e.printStackTrace();
 		}	
 		return "";
 	}
 	
 	/**
-	 * 	ĞŞ¸ÄÓÊÏäÓÊ¼şÄÚÈİ
-	 * @param email ÓÃ»§ÓÊÏäºÅ
-	 * @param enc ¼ÓÃÜºóµÄÓÃ»§Id
-	 * @return    ·µ»ØÓÊÏäÀàÈİ
+	 * 	ä¿®æ”¹é‚®ç®±é‚®ä»¶å†…å®¹
+	 * @param email ç”¨æˆ·é‚®ç®±å·
+	 * @param enc åŠ å¯†åçš„ç”¨æˆ·Id
+	 * @return    è¿”å›é‚®ç®±ç±»å®¹
 	 */
 	public static String getUpdateMailCapacity(String email,String enc,String username){
 		
 		try {
 			if(!(StringUtils.isEmpty(email.trim()) && StringUtils.isEmpty(enc.trim()) && StringUtils.isEmpty(username.trim()))){
 				StringBuffer sb = new StringBuffer();
-				sb.append("Ç×°®µÄ"+username+",ÄúºÃ!");
+				sb.append("äº²çˆ±çš„"+username+",æ‚¨å¥½!");
 				sb.append("<br>");
 				sb.append("</br>");
-				sb.append("¸ĞĞ»Äú×¢²á£¬Äú½øĞĞÈÏÖ¤µÄĞŞ¸ÄÓÊÏäÕÊºÅÎª  "+email);
+				sb.append("æ„Ÿè°¢æ‚¨æ³¨å†Œï¼Œæ‚¨è¿›è¡Œè®¤è¯çš„ä¿®æ”¹é‚®ç®±å¸å·ä¸º  "+email);
 				sb.append("<br>");
 				sb.append("</br>");
-				sb.append("Çëµã»÷ÏÂÃæµÄÁ´½Ó¼´¿ÉÍê³É¼¤»î¡£");
+				sb.append("è¯·ç‚¹å‡»ä¸‹é¢çš„é“¾æ¥å³å¯å®Œæˆæ¿€æ´»ã€‚");
 				sb.append("<br>");
 				sb.append("</br>");
 				//String url = getUrl("home.url");
-				sb.append("<a href=\""+"http://localhost:8080/p2p_action/verification/emailactivation?us="+enc); //·şÎñÆ÷Â·¾¶ 
+				sb.append("<a href=\""+"http://localhost:8080/p2p_action/verification/emailactivation?us="+enc); //æœåŠ¡å™¨è·¯å¾„ 
 				sb.append("\">");
-				sb.append("µãÎÒµãÎÒ");// ·şÎñÆ÷Â·¾¶
+				sb.append("ç‚¹æˆ‘ç‚¹æˆ‘");// æœåŠ¡å™¨è·¯å¾„
 				sb.append("</a>");
 				return sb.toString();
 			}
 		} catch (Exception e) {
-			System.out.println("===========ÕâÀï³ö´íÁË==========");
+			System.out.println("===========è¿™é‡Œå‡ºé”™äº†==========");
 			e.printStackTrace();
 		}	
 		return "";
 	}
 	/**
-	 * »ñÈ¡properites ÎÄ¼şÖĞµÄÖµ
+	 * è·å–properites æ–‡ä»¶ä¸­çš„å€¼
 	 * @param key 
 	 * @return
 	 * @throws IOException
@@ -142,10 +142,10 @@ public class EmailUtils {
 	
 	
 	
-	/**   ±¸·İ
-	 * sb.append("<a href=\"http://"+path+"/api/emailAuth/emailactivation.do?us="+enc); //·şÎñÆ÷Â·¾¶ 
+	/**   å¤‡ä»½
+	 * sb.append("<a href=\"http://"+path+"/api/emailAuth/emailactivation.do?us="+enc); //æœåŠ¡å™¨è·¯å¾„ 
 				sb.append("\" >");
-				sb.append("http://"+path+"/api/emailAuth/emailactivation.do?us="+enc);/* ·şÎñÆ÷Â·¾¶
+				sb.append("http://"+path+"/api/emailAuth/emailactivation.do?us="+enc);/* æœåŠ¡å™¨è·¯å¾„
 				sb.append("</a>");
 	 */
 }

@@ -18,6 +18,7 @@ import cn.hlyc.service.admin.IAdminService;
 public class AdminAction extends BaseAction {
     
 	//再次修改
+	//再次修改
 	@Autowired
 	private IAdminService adminService;
 

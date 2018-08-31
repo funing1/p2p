@@ -353,7 +353,7 @@
 						<showWarnings>true</showWarnings>
 						<compilerArguments>
 						     <verbose/>
-						       <bootclasspath>${java.hmoe}\lib\rt.jar;${java.hmoe}\lib\jec.jar</bootclasspath>
+						       <bootclasspath>${java.home}/lib/rt.jar${path.separator}${java.home}/lib/jce.jar</bootclasspath>
 						</compilerArguments>
 					</configuration>
 				</plugin>

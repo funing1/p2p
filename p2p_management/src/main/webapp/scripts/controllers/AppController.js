@@ -39,7 +39,7 @@ angular
 
 		.controller(
 				'loginCtrl',
-				function($rootScope, $scope, $state, AdminService) { // 将AdminService注入到了当前的loginCtrl中。
+				function($rootScope, $scope, $state, AdminService,hmd) { // 将AdminService注入到了当前的loginCtrl中。
 					$scope.errorMsg = '';
 
 					$scope.login = function(username, password) {
@@ -74,7 +74,7 @@ angular
 		.controller(
 				'homeCtrl',
 				function($rootScope, $location, $scope, $state, AdminService,
-						$compile) {
+						$compile,hmd) {
 					$scope.path = $location.path();
 					document.getElementById("admin").innerText = localStorage
 							.getItem("admin_name")
@@ -203,7 +203,7 @@ angular
 					}
 				})
 		// 用户列表
-		.controller("userListCtrl", function($scope, $state, UserService) {
+		.controller("userListCtrl", function($scope, $state, UserService,hmd) {
 
 			// 页面加载过程中，这个函数会执行，得到用户信息
 			$scope.getUserList = function() {
@@ -272,7 +272,7 @@ angular
 		.controller(
 				"userAdd",
 				function($rootScope, $scope, $interval, $state, UserService,
-						AuthService, PostService, UserService,
+						AuthService, PostService, UserService,hmd,
 						checkParamService2) {
 					$scope.save = function() {
 						// 应该判断验证是ok，才可以进行注册
@@ -491,7 +491,7 @@ angular
 		// 修改用户
 		.controller(
 				"userEdit",
-				function($scope, $state, $stateParams, UserService) {
+				function($scope, $state, $stateParams, UserService,hmd) {
 
 					var id = $stateParams.id;
 					var str = "id=" + id
@@ -535,7 +535,7 @@ angular
 				})
 
 		// 产品列表
-		.controller("productList", function($scope, $state, ProductService) {
+		.controller("productList", function($scope, $state, ProductService,hmd) {
 
 			// 页面加载过程中，这个函数会执行
 			$scope.getProductList = function() {
@@ -604,7 +604,7 @@ angular
 		// 产品添加
 		.controller(
 				"productAdd",
-				function($scope, $state, ProductService) {
+				function($scope, $state, ProductService,hmd) {
 					$scope.saveProduct = function() {
 						var str = "";
 						for ( var x in $scope.productInfo) {
@@ -634,6 +634,9 @@ angular
 								function(response) {
 									if (response.status == 1) {
 										$state.go("home.productlist");
+									}else{
+										
+										hmd.popupErrorInfo(response.status);
 									}
 								})
 
@@ -670,7 +673,7 @@ angular
 		// 修改产品
 		.controller(
 				"productEdit",
-				function($scope, $state, $stateParams, ProductService) {
+				function($scope, $state, $stateParams, ProductService,hmd) {
 
 					var proId = $stateParams.proId;
 					var str = "pid=" + proId
@@ -682,6 +685,8 @@ angular
 								function(response) {
 									if (response.status == 1) {
 										$scope.productInfo = response.data;
+									}else{
+										hmd.popupErrorInfo(response.status);
 									}
 								})
 					})();
@@ -716,6 +721,8 @@ angular
 								function(response) {
 									if (response.status == 1) {
 										$state.go("home.productlist");
+									}else{
+										hmd.popupErrorInfo(response.status);
 									}
 								});
 
@@ -740,6 +747,8 @@ angular
 													backdrop : "static"
 												};
 												$('#myModal_b').modal(options);
+											}else{
+												hmd.popupErrorInfo(response.status);
 											}
 										});
 					}

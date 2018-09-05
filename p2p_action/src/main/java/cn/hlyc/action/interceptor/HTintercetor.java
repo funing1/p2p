@@ -53,12 +53,14 @@ public class HTintercetor extends MethodFilterInterceptor {
 		String AdminId = baseCacheService.get("AdminId");
 
 		if (AdminId == null) {
+			System.out.println("您还没登录");
 			return "tologin";
 		}
 
 		AdminModel admin = adminService.findById(Integer.parseInt(AdminId));
 
 		if (admin == null) {
+			System.out.println("您不是后台用户");
 			return "tologin";
 		}
 
@@ -107,26 +109,43 @@ public class HTintercetor extends MethodFilterInterceptor {
 				if (privilege.getId() == 1 || privilege.getId() == 2) {
 					quanxian = true;
 				}
+
+				for (Privilege privilege2 : privilege.getPrivilegeChildren()) {
+					if (privilege2.getId() == 1 || privilege2.getId() == 2) {
+						quanxian = true;
+					}
+
+				}
+
 			}
 
 		}
-		
-		
-		if (requestURL.toString().contains("/product/addProduct") || requestURL.toString().contains("/product/modifyProduct")
+
+		if (requestURL.toString().contains("/product/addProduct")
+				|| requestURL.toString().contains("/product/modifyProduct")
 				|| requestURL.toString().contains("/product/delProduct")) {
 
 			for (Privilege privilege : privilegelist) {
 				if (privilege.getId() == 9) {
 					quanxian = true;
 				}
+
+				for (Privilege privilege2 : privilege.getPrivilegeChildren()) {
+					if (privilege2.getId() == 9) {
+						quanxian = true;
+					}
+
+				}
 			}
 
 		}
-		
-		if(!quanxian){
+
+		if (!quanxian) {
+			System.out.println("您的权限不够");
 			return "tologin";
 		}
 
+		System.out.println("放行");
 		return invocation.invoke();
 	}
 

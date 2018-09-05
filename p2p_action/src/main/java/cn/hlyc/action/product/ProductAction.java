@@ -77,7 +77,7 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		Map map = new JsonMapper().fromJson(proEarningRates, Map.class);
 		List<ProductEarningRate> pers = new ArrayList<ProductEarningRate>();
 		
-		if(map != null && map.isEmpty() && proEarningRates != null){
+		if(map != null && !map.isEmpty() && proEarningRates != null){
 		for (Object key : map.keySet()) {
 			// key就是月份 value就是利率值
 			ProductEarningRate per = new ProductEarningRate();

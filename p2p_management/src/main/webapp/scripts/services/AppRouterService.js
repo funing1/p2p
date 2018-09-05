@@ -100,6 +100,22 @@ function($stateProvider, $urlRouterProvider) {
 		templateUrl : './views/rights/multiple.html',
 		controller : 'multiple'
 	})
+	//角色
+	.state("home.juese", {
+		url : "/juese",
+		templateUrl : './views/juese_manager/jueseList.html', // 页面
+		controller : 'jueseCtrl' // 控制器
+			
+			
+	})
+	//权限
+	.state("home.quanxian", {
+		url : "/quanxian",
+		templateUrl : './views/quanxian_manager/quanxianList.html', // 页面
+		controller : 'quanxianCtrl' // 控制器
+			
+			
+	})
 
 }).config(function($sceProvider) {
 	$sceProvider.enabled(false);

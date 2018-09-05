@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -23,12 +26,17 @@ import cn.hlyc.utils.Response;
 @Namespace("/updateUser")
 @Controller
 @Scope("prototype")
+@ParentPackage("customdefault")
+@InterceptorRefs(value = {
+		@InterceptorRef(value = "myStack")
+})
+
 public class UpdateUserAction extends BaseAction {
 	
 	@Autowired
 	private IUserService userService;
 
-	@Action("update")
+	@Action(value="update")
 	public void update() {
 		String id = this.getRequest().getParameter("id");
 		String username = this.getRequest().getParameter("username");

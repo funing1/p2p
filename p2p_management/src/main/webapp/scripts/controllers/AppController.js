@@ -10,6 +10,30 @@ function objToStr(obj) {
 	}
 }
 
+function toggle($a) {
+
+	$($a).next().toggle()
+
+}
+
+function setCheck() {
+	var zTree = $.fn.zTree.getZTreeObj("treeDemo"), type = {
+		"Y" : "s",
+		"N" : "ps"
+	};
+	zTree.setting.check.chkboxType = type;
+
+}
+
+function setQxCheck() {
+	var zTree = $.fn.zTree.getZTreeObj("treeDemo"), type = {
+		"Y" : "ps",
+		"N" : "ps"
+	};
+	zTree.setting.check.chkboxType = type;
+
+}
+
 angular
 		.module('AppController', [])
 
@@ -23,16 +47,20 @@ angular
 						var str = 'username=' + username + '&password='
 								+ password;
 						// alert(username + " " + password);
-						AdminService.signIn(str).success(function(response) {
-							if (response.status == 1) {
-								$rootScope.LoginAdmin = username;
-								$state.go("home"); // 改变状态
-							} else if (response.status == 0) {
-								$scope.errorMsg = '用户名或密码错误';
-							} else {
-								$scope.errorMsg = '用户登录异常，请联系客服！';
-							}
-						}).error(function() {
+						AdminService.signIn(str).success(
+								function(response) {
+									if (response.status == 1) {
+										localStorage.setItem("admin_name",
+												response.data.username);
+										localStorage.setItem("admin_id",
+												response.data.id);
+										$state.go("home"); // 改变状态
+									} else if (response.status == 0) {
+										$scope.errorMsg = '用户名或密码错误';
+									} else {
+										$scope.errorMsg = '用户登录异常，请联系客服！';
+									}
+								}).error(function() {
 							$scope.errorMsg = '网络异常，稍后重试！';
 							$scope.refresh();
 						});
@@ -45,56 +73,128 @@ angular
 		// 空间首页
 		.controller(
 				'homeCtrl',
-				function($rootScope, $location, $scope, $state) {
-					var arr = [];
-					var len = 30;
-					for (var i = 0; i < len; i++) {
-						var strTem = '"a' + i + '":true';
-						arr.push(strTem)
-					}
-					var str = "{" + arr.join(',') + '}';
-					var obj = eval('(' + str + ')');
-					$scope.rights = obj;
-					if ($scope.rights.a1 || $scope.rights.a2
-							|| $scope.rights.a28) {
-						$(".menu_list>li").eq(0).css("display", "block");
-					}
-					if ($scope.rights.a7 || $scope.rights.a4
-							|| $scope.rights.a5 || $scope.rights.a6
-							|| $scope.rights.a29) {
-						$(".menu_list>li").eq(1).css("display", "block");
-					}
-
-					if ($scope.rights.a3) {
-						$(".menu_list>li").eq(2).css("display", "block")
-					}
-					if ($scope.rights.a8 || $scope.rights.a9
-							|| $scope.rights.a10 || $scope.rights.a11
-							|| $scope.rights.a30 || $scope.rights.a31) {
-						$(".menu_list>li").eq(3).css("display", "block")
-					}
-					if ($scope.rights.a13 || $scope.rights.a14
-							|| $scope.rights.a15 || $scope.rights.a16
-							|| $scope.rights.a17 || $scope.rights.a18
-							|| $scope.rights.a19 || $scope.rights.a20) {
-						$(".menu_list>li").eq(4).css("display", "block")
-					}
-					if ($scope.rights.a21 || $scope.rights.a22) {
-						$(".menu_list>li").eq(5).css("display", "block")
-					}
-					if ($scope.rights.a23) {
-						$(".menu_list>li").eq(6).css("display", "block")
-					}
-					if ($scope.rights.a24 || $scope.rights.a25) {
-						$(".menu_list>li").eq(7).css("display", "block")
-					}
-					if ($scope.rights.a26) {
-						$(".menu_list>li").eq(8).css("display", "block")
-					}
-					if ($scope.rights.a27) {
-						$(".menu_list>li").eq(9).css("display", "block")
-					}
+				function($rootScope, $location, $scope, $state, AdminService,
+						$compile) {
 					$scope.path = $location.path();
+					document.getElementById("admin").innerText = localStorage
+							.getItem("admin_name")
+							+ "";
+
+					var str = 'adminId=' + localStorage.getItem("admin_id");
+					AdminService
+							.quanxian(str)
+							.success(
+									function(response) {
+										if (response.status == 1) {
+											$scope.glsf = response.data.rolelist[0].rolename;
+
+											var html = "";
+											for ( var x in response.data.privilegelist) {
+												if (response.data.privilegelist[x].type == 1) {
+
+													html += "<li ng-class="
+															+ response.data.privilegelist[x].liNgClass
+															+ "><a href='javascript:;' rel='title' onclick='toggle(this)'><img src='"
+															+ response.data.privilegelist[x].imgsrc
+															+ "' width='16' height='14' >&nbsp;"
+															+ response.data.privilegelist[x].name
+															+ "</a> <ul class='subMenu' style="
+															+ response.data.privilegelist[x].ulStyle
+															+ ">";
+
+													for ( var y in response.data.privilegelist[x].privilegeChildren) {
+
+														html += "<li><a href='javascript:;' ui-sref='"
+																+ response.data.privilegelist[x].privilegeChildren[y].liuisref
+																+ "'  ui-sref-active='active'>"
+																+ response.data.privilegelist[x].privilegeChildren[y].name
+																+ "</a></li>";
+													}
+													html += "  </ul>  </li>";
+
+												}
+											}
+											var $html = $compile(html)($scope);
+											$("#caidan").html($html);
+
+											var arr = [];
+											var len = 30;
+											for (var i = 0; i < len; i++) {
+												var strTem = '"a' + i
+														+ '":true';
+												arr.push(strTem)
+											}
+											var str = "{" + arr.join(',') + '}';
+
+											var obj = eval('(' + str + ')');
+
+											$scope.rights = obj;
+
+											if ($scope.rights.a1
+													|| $scope.rights.a2
+													|| $scope.rights.a28) {
+												$(".menu_list>li").eq(0).css(
+														"display", "block");
+
+											}
+											if ($scope.rights.a7
+													|| $scope.rights.a4
+													|| $scope.rights.a5
+													|| $scope.rights.a6
+													|| $scope.rights.a29) {
+												$(".menu_list>li").eq(1).css(
+														"display", "block");
+											}
+
+											if ($scope.rights.a3) {
+												$(".menu_list>li").eq(2).css(
+														"display", "block")
+											}
+											if ($scope.rights.a8
+													|| $scope.rights.a9
+													|| $scope.rights.a10
+													|| $scope.rights.a11
+													|| $scope.rights.a30
+													|| $scope.rights.a31) {
+												$(".menu_list>li").eq(3).css(
+														"display", "block")
+											}
+											if ($scope.rights.a13
+													|| $scope.rights.a14
+													|| $scope.rights.a15
+													|| $scope.rights.a16
+													|| $scope.rights.a17
+													|| $scope.rights.a18
+													|| $scope.rights.a19
+													|| $scope.rights.a20) {
+												$(".menu_list>li").eq(4).css(
+														"display", "block")
+											}
+											if ($scope.rights.a21
+													|| $scope.rights.a22) {
+												$(".menu_list>li").eq(5).css(
+														"display", "block")
+											}
+											if ($scope.rights.a23) {
+												$(".menu_list>li").eq(6).css(
+														"display", "block")
+											}
+											if ($scope.rights.a24
+													|| $scope.rights.a25) {
+												$(".menu_list>li").eq(7).css(
+														"display", "block")
+											}
+											if ($scope.rights.a26) {
+												$(".menu_list>li").eq(8).css(
+														"display", "block")
+											}
+											if ($scope.rights.a27) {
+												$(".menu_list>li").eq(9).css(
+														"display", "block")
+											}
+
+										}
+									})
 
 					// 退出操作
 					$scope.logout = function() {
@@ -891,7 +991,6 @@ angular
 							createJson(data, "datetimeEnd2", datetimeEnd);
 						}
 
-						alert(JSON.stringify(data))
 						jiaoyiService
 								.chaxun(objToStr(data))
 								.success(
@@ -931,8 +1030,6 @@ angular
 				function($scope, $state, AuthService, PostService, hmd,
 						checkParamService, jiaoyiService, $stateParams) {
 
-					
-
 					$scope.datetimeStart = "1996-06-06";
 					$scope.datetimeEnd = "2020-06-06";
 					$scope.radio = "1";
@@ -945,15 +1042,22 @@ angular
 										if (response.status == 1) {
 											var dataxAxis = []; // 横轴数组
 											var dataseries = []; // 纵轴数组
-											var dataDiv5 = [];  //div5的数据
+											var dataDiv5 = []; // div5的数据
 											var dataDiv5legend = [];
 											for ( var x in response.data) {
 												dataxAxis[x] = response.data[x].pname;
 												dataseries[x] = response.data[x].zmoney;
-												dataDiv5[x] =  {value:response.data[x].count, name: response.data[x].count+'-'+response.data[x].pname}
-												dataDiv5legend[x] = response.data[x].count+'-'+response.data[x].pname;          
+												dataDiv5[x] = {
+													value : response.data[x].count,
+													name : response.data[x].count
+															+ '-'
+															+ response.data[x].pname
+												}
+												dataDiv5legend[x] = response.data[x].count
+														+ '-'
+														+ response.data[x].pname;
 											}
-                                             
+
 											// 基于准备好的DOM，初始化echarts实例
 											var myChart = echarts.init(document
 													.getElementById('div4'));
@@ -987,86 +1091,106 @@ angular
 											};
 											// 使用刚指定的配置项和数据显示图表
 											myChart.setOption(option);
-											
-											
-											//-------------------------------
-											
-											
-											
-											 var myChart1 = echarts.init(document.getElementById('div5'));
-											    option1 = {
-											        title:{
-											            text:'按产品统计',
-											            top:'bottom',
-											            left:'center',
-											            padding: 3,
-											            textStyle:{
-											                fontSize: 18,
-											                fontWeight: '',
-											                color: '#333'
-											            },
-											        },//标题
-											        tooltip: {
-											            trigger: 'item',
-											            formatter: "{a} <br/>{b}: {c} ({d}%)",
-											            /*formatter:function(val){   //让series 中的文字进行换行
-											                 console.log(val);//查看val属性，可根据里边属性自定义内容
-											                 var content = var['name'];
-											                 return content;//返回可以含有html中标签
-											             },*/ //自定义鼠标悬浮交互信息提示，鼠标放在饼状图上时触发事件
-											        },//提示框，鼠标悬浮交互时的信息提示
-											        legend: {
-											            show: false,
-											            orient: 'vertical',
-											            x: 'left',
-											            data: dataDiv5legend
-											        },//图例属性，以饼状图为例，用来说明饼状图每个扇区，data与下边series中data相匹配
-											        graphic:{
-											            type:'text',
-											            left:'center',
-											            top:'center',
-											            style:{
-											                text:'投资金额统计', //使用“+”可以使每行文字居中
-											                textAlign:'center',
-											                font:'italic bolder 16px cursive',
-											                fill:'#000',
-											                width:30,
-											                height:30
-											            }
-											        },//此例饼状图为圆环中心文字显示属性，这是一个原生图形元素组件，功能很多
-											        series: [
-											            {
-											                name:'投资金额统计',//tooltip提示框中显示内容
-											                type: 'pie',//图形类型，如饼状图，柱状图等
-											                radius: ['35%', '65%'],//饼图的半径，数组的第一项是内半径，第二项是外半径。支持百分比，本例设置成环形图。具体可以看文档或改变其值试一试
-											                //roseType:'area',是否显示成南丁格尔图，默认false
-											                itemStyle: {
-											                    normal:{
-											                        label:{
-											                            show:true,
-											                            textStyle:{color:'#3c4858',fontSize:"18"},
-											                            formatter:function(val){   //让series 中的文字进行换行
-											                                return val.name.split("-").join("\n");}
-											                        },//饼图图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。可以与itemStyle属性同级，具体看文档
-											                        labelLine:{
-											                            show:true,
-											                            lineStyle:{color:'#3c4858'}
-											                        }//线条颜色
-											                    },//基本样式
-											                    emphasis: {
-											                        shadowBlur: 10,
-											                        shadowOffsetX: 0,
-											                        shadowColor: 'rgba(0, 0, 0, 0.5)',//鼠标放在区域边框颜色
-											                        textColor:'#000'
-											                    }//鼠标放在各个区域的样式
-											                },
-											                data:dataDiv5,//数据，数据中其他属性，查阅文档
-											                color: ['#51CEC6','#FFB703','#5FA0FA'],//各个区域颜色
-											            },//数组中一个{}元素，一个图，以此可以做出环形图
-											        ],//系列列表
-											    };
-											    myChart1.setOption(option1);
-										}else{
+
+											// -------------------------------
+
+											var myChart1 = echarts
+													.init(document
+															.getElementById('div5'));
+											option1 = {
+												title : {
+													text : '按产品统计',
+													top : 'bottom',
+													left : 'center',
+													padding : 3,
+													textStyle : {
+														fontSize : 18,
+														fontWeight : '',
+														color : '#333'
+													},
+												},// 标题
+												tooltip : {
+													trigger : 'item',
+													formatter : "{a} <br/>{b}: {c} ({d}%)",
+												/*
+												 * formatter:function(val){
+												 * //让series 中的文字进行换行
+												 * console.log(val);//查看val属性，可根据里边属性自定义内容
+												 * var content = var['name'];
+												 * return
+												 * content;//返回可以含有html中标签 },
+												 */// 自定义鼠标悬浮交互信息提示，鼠标放在饼状图上时触发事件
+												},// 提示框，鼠标悬浮交互时的信息提示
+												legend : {
+													show : false,
+													orient : 'vertical',
+													x : 'left',
+													data : dataDiv5legend
+												},// 图例属性，以饼状图为例，用来说明饼状图每个扇区，data与下边series中data相匹配
+												graphic : {
+													type : 'text',
+													left : 'center',
+													top : 'center',
+													style : {
+														text : '投资金额统计', // 使用“+”可以使每行文字居中
+														textAlign : 'center',
+														font : 'italic bolder 16px cursive',
+														fill : '#000',
+														width : 30,
+														height : 30
+													}
+												},// 此例饼状图为圆环中心文字显示属性，这是一个原生图形元素组件，功能很多
+												series : [
+														{
+															name : '投资金额统计',// tooltip提示框中显示内容
+															type : 'pie',// 图形类型，如饼状图，柱状图等
+															radius : [ '35%',
+																	'65%' ],// 饼图的半径，数组的第一项是内半径，第二项是外半径。支持百分比，本例设置成环形图。具体可以看文档或改变其值试一试
+															// roseType:'area',是否显示成南丁格尔图，默认false
+															itemStyle : {
+																normal : {
+																	label : {
+																		show : true,
+																		textStyle : {
+																			color : '#3c4858',
+																			fontSize : "18"
+																		},
+																		formatter : function(
+																				val) { // 让series
+																			// 中的文字进行换行
+																			return val.name
+																					.split(
+																							"-")
+																					.join(
+																							"\n");
+																		}
+																	},// 饼图图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。可以与itemStyle属性同级，具体看文档
+																	labelLine : {
+																		show : true,
+																		lineStyle : {
+																			color : '#3c4858'
+																		}
+																	}
+																// 线条颜色
+																},// 基本样式
+																emphasis : {
+																	shadowBlur : 10,
+																	shadowOffsetX : 0,
+																	shadowColor : 'rgba(0, 0, 0, 0.5)',// 鼠标放在区域边框颜色
+																	textColor : '#000'
+																}
+															// 鼠标放在各个区域的样式
+															},
+															data : dataDiv5,// 数据，数据中其他属性，查阅文档
+															color : [
+																	'#51CEC6',
+																	'#FFB703',
+																	'#5FA0FA' ],// 各个区域颜色
+														},// 数组中一个{}元素，一个图，以此可以做出环形图
+												],// 系列列表
+											};
+											myChart1.setOption(option1);
+										} else {
 											hmd.popupErrorInfo(response.status);
 										}
 									});
@@ -1089,23 +1213,33 @@ angular
 											if (response.status == 1) {
 												var dataxAxis = []; // 横轴数组
 												var dataseries = []; // 纵轴数组
-												var datalegend = [];//图例
-												var dataDiv5 = [];  //div5的数据
+												var datalegend = [];// 图例
+												var dataDiv5 = []; // div5的数据
 												var title = '';
 												var dataDiv5legend = [];
-												if(radio == "1"){
-													datalegend[0] = datetimeStart+' 至   '+datetimeEnd+'  内的成交总金额';
-													title ='按这段日期范围内统计';
-												}else if(radio == "2"){
+												if (radio == "1") {
+													datalegend[0] = datetimeStart
+															+ ' 至   '
+															+ datetimeEnd
+															+ '  内的成交总金额';
+													title = '按这段日期范围内统计';
+												} else if (radio == "2") {
 													datalegend[0] = '成交总笔数';
-													title='按产品成交笔数统计';
+													title = '按产品成交笔数统计';
 												}
-												
+
 												for ( var x in response.data) {
 													dataxAxis[x] = response.data[x].pname;
 													dataseries[x] = response.data[x].zmoney;
-													dataDiv5[x] =  {value:response.data[x].count, name: response.data[x].count+'-'+response.data[x].pname}
-													dataDiv5legend[x] = response.data[x].count+'-'+response.data[x].pname;          
+													dataDiv5[x] = {
+														value : response.data[x].count,
+														name : response.data[x].count
+																+ '-'
+																+ response.data[x].pname
+													}
+													dataDiv5legend[x] = response.data[x].count
+															+ '-'
+															+ response.data[x].pname;
 												}
 
 												// 基于准备好的DOM，初始化echarts实例
@@ -1142,93 +1276,315 @@ angular
 												};
 												// 使用刚指定的配置项和数据显示图表
 												myChart.setOption(option);
-												
-												//------------------------------
-												
-												
-												//-------------------------------
-												
-												
-												
-												 var myChart1 = echarts.init(document.getElementById('div5'));
-												    option1 = {
-												        title:{
-												            text:title,
-												            top:'bottom',
-												            left:'center',
-												            padding: 3,
-												            textStyle:{
-												                fontSize: 18,
-												                fontWeight: '',
-												                color: '#333'
-												            },
-												        },//标题
-												        tooltip: {
-												            trigger: 'item',
-												            formatter: "{a} <br/>{b}: {c} ({d}%)",
-												            /*formatter:function(val){   //让series 中的文字进行换行
-												                 console.log(val);//查看val属性，可根据里边属性自定义内容
-												                 var content = var['name'];
-												                 return content;//返回可以含有html中标签
-												             },*/ //自定义鼠标悬浮交互信息提示，鼠标放在饼状图上时触发事件
-												        },//提示框，鼠标悬浮交互时的信息提示
-												        legend: {
-												            show: false,
-												            orient: 'vertical',
-												            x: 'left',
-												            data: dataDiv5legend
-												        },//图例属性，以饼状图为例，用来说明饼状图每个扇区，data与下边series中data相匹配
-												        graphic:{
-												            type:'text',
-												            left:'center',
-												            top:'center',
-												            style:{
-												                text:'投资金额统计', //使用“+”可以使每行文字居中
-												                textAlign:'center',
-												                font:'italic bolder 16px cursive',
-												                fill:'#000',
-												                width:30,
-												                height:30
-												            }
-												        },//此例饼状图为圆环中心文字显示属性，这是一个原生图形元素组件，功能很多
-												        series: [
-												            {
-												                name:'投资金额统计',//tooltip提示框中显示内容
-												                type: 'pie',//图形类型，如饼状图，柱状图等
-												                radius: ['35%', '65%'],//饼图的半径，数组的第一项是内半径，第二项是外半径。支持百分比，本例设置成环形图。具体可以看文档或改变其值试一试
-												                //roseType:'area',是否显示成南丁格尔图，默认false
-												                itemStyle: {
-												                    normal:{
-												                        label:{
-												                            show:true,
-												                            textStyle:{color:'#3c4858',fontSize:"18"},
-												                            formatter:function(val){   //让series 中的文字进行换行
-												                                return val.name.split("-").join("\n");}
-												                        },//饼图图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。可以与itemStyle属性同级，具体看文档
-												                        labelLine:{
-												                            show:true,
-												                            lineStyle:{color:'#3c4858'}
-												                        }//线条颜色
-												                    },//基本样式
-												                    emphasis: {
-												                        shadowBlur: 10,
-												                        shadowOffsetX: 0,
-												                        shadowColor: 'rgba(0, 0, 0, 0.5)',//鼠标放在区域边框颜色
-												                        textColor:'#000'
-												                    }//鼠标放在各个区域的样式
-												                },
-												                data:dataDiv5,//数据，数据中其他属性，查阅文档
-												                color: ['#51CEC6','#FFB703','#5FA0FA'],//各个区域颜色
-												            },//数组中一个{}元素，一个图，以此可以做出环形图
-												        ],//系列列表
-												    };
-												    myChart1.setOption(option1);
-											}else{
-												hmd.popupErrorInfo(response.status);
+
+												// ------------------------------
+
+												// -------------------------------
+
+												var myChart1 = echarts
+														.init(document
+																.getElementById('div5'));
+												option1 = {
+													title : {
+														text : title,
+														top : 'bottom',
+														left : 'center',
+														padding : 3,
+														textStyle : {
+															fontSize : 18,
+															fontWeight : '',
+															color : '#333'
+														},
+													},// 标题
+													tooltip : {
+														trigger : 'item',
+														formatter : "{a} <br/>{b}: {c} ({d}%)",
+													/*
+													 * formatter:function(val){
+													 * //让series 中的文字进行换行
+													 * console.log(val);//查看val属性，可根据里边属性自定义内容
+													 * var content =
+													 * var['name']; return
+													 * content;//返回可以含有html中标签 },
+													 */// 自定义鼠标悬浮交互信息提示，鼠标放在饼状图上时触发事件
+													},// 提示框，鼠标悬浮交互时的信息提示
+													legend : {
+														show : false,
+														orient : 'vertical',
+														x : 'left',
+														data : dataDiv5legend
+													},// 图例属性，以饼状图为例，用来说明饼状图每个扇区，data与下边series中data相匹配
+													graphic : {
+														type : 'text',
+														left : 'center',
+														top : 'center',
+														style : {
+															text : '投资金额统计', // 使用“+”可以使每行文字居中
+															textAlign : 'center',
+															font : 'italic bolder 16px cursive',
+															fill : '#000',
+															width : 30,
+															height : 30
+														}
+													},// 此例饼状图为圆环中心文字显示属性，这是一个原生图形元素组件，功能很多
+													series : [
+															{
+																name : '投资金额统计',// tooltip提示框中显示内容
+																type : 'pie',// 图形类型，如饼状图，柱状图等
+																radius : [
+																		'35%',
+																		'65%' ],// 饼图的半径，数组的第一项是内半径，第二项是外半径。支持百分比，本例设置成环形图。具体可以看文档或改变其值试一试
+																// roseType:'area',是否显示成南丁格尔图，默认false
+																itemStyle : {
+																	normal : {
+																		label : {
+																			show : true,
+																			textStyle : {
+																				color : '#3c4858',
+																				fontSize : "18"
+																			},
+																			formatter : function(
+																					val) { // 让series
+																				// 中的文字进行换行
+																				return val.name
+																						.split(
+																								"-")
+																						.join(
+																								"\n");
+																			}
+																		},// 饼图图形上的文本标签，可用于说明图形的一些数据信息，比如值，名称等。可以与itemStyle属性同级，具体看文档
+																		labelLine : {
+																			show : true,
+																			lineStyle : {
+																				color : '#3c4858'
+																			}
+																		}
+																	// 线条颜色
+																	},// 基本样式
+																	emphasis : {
+																		shadowBlur : 10,
+																		shadowOffsetX : 0,
+																		shadowColor : 'rgba(0, 0, 0, 0.5)',// 鼠标放在区域边框颜色
+																		textColor : '#000'
+																	}
+																// 鼠标放在各个区域的样式
+																},
+																data : dataDiv5,// 数据，数据中其他属性，查阅文档
+																color : [
+																		'#51CEC6',
+																		'#FFB703',
+																		'#5FA0FA' ],// 各个区域颜色
+															},// 数组中一个{}元素，一个图，以此可以做出环形图
+													],// 系列列表
+												};
+												myChart1.setOption(option1);
+											} else {
+												hmd
+														.popupErrorInfo(response.status);
 											}
 
 										})
 
+					}
+
+				})
+		// 角色
+		.controller(
+				'jueseCtrl',
+				function($scope, $state, AuthService, PostService,
+						AdminService, hmd, checkParamService, jiaoyiService,
+						$stateParams) {
+					AdminService.findAllAdmin().success(function(response) {
+						if (response.status == 1) {
+							$scope.ad = response.data;
+						} else {
+							hmd.popupErrorInfo(response.status);
+						}
+					})
+
+					$scope.sz = function(aId, aname) {
+						$scope.admin_Id = aId;
+						$scope.admin_Name = aname;
+						$("#userTitle").show()
+
+						AdminService
+								.findAlljuese()
+								.success(
+										function(response) {
+											if (response.status == 1) {
+
+												var setting = {
+													check : {
+														enable : true
+													},
+													data : {
+														simpleData : {
+															enable : true
+														}
+													}
+												};
+
+												var zNodes = [ {
+													id : 0,
+													name : "管理员角色",
+													open : true,
+													nocheck : true
+												} ];
+
+												for ( var x in response.data) {
+
+													var node = {
+														id : response.data[x].id,
+														pId : 0,
+														name : response.data[x].rolename
+													}
+
+													zNodes.push(node)
+												}
+
+												$.fn.zTree.init($("#treeDemo"),
+														setting, zNodes);
+
+												setCheck();
+
+											} else {
+												hmd
+														.popupErrorInfo(response.status);
+											}
+										})
+
+					}
+
+					$scope.saveRole = function(admin_Id) {
+
+						var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+						var nodes = treeObj.getCheckedNodes(true);
+						var nodesIds = "";
+						for ( var node in nodes) {
+
+							nodesIds += nodes[node].id + ",";
+						}
+
+						var data = {
+							adminId : admin_Id,
+							jueses_Ids : nodesIds
+						};
+
+						AdminService
+								.updateRole(objToStr(data))
+								.success(
+										function(response) {
+											if (response.status == 1) {
+												alert("saveOk")
+												$("#userTitle").hide()
+											} else {
+												hmd
+														.popupErrorInfo(response.status);
+											}
+										})
+
+					}
+
+					$scope.quxiao = function() {
+						$("#userTitle").hide()
+					}
+
+				})
+		// 权限
+		.controller(
+				'quanxianCtrl',
+				function($scope, $state, AuthService, PostService,
+						AdminService, hmd, checkParamService, jiaoyiService,
+						$stateParams) {
+					AdminService.findAlljuese().success(function(response) {
+						if (response.status == 1) {
+							$scope.js = response.data;
+						} else {
+							hmd.popupErrorInfo(response.status);
+						}
+					})
+
+					$scope.sz = function(roleId, roleName) {
+						$scope.role_Id = roleId;
+						$scope.role_name = roleName;
+						$("#userTitle").show()
+
+						AdminService
+								.findAllquanxian()
+								.success(
+										function(response) {
+											if (response.status == 1) {
+												var setting = {
+													check : {
+														enable : true
+													},
+													data : {
+														simpleData : {
+															enable : true
+														}
+													}
+												};
+
+												var zNodes = [];
+
+												for ( var x in response.data) {
+
+													var node = {
+														id : response.data[x].id,
+														pId : response.data[x].parentId,
+														name : response.data[x].name
+													}
+
+													zNodes.push(node)
+												}
+
+												$.fn.zTree.init($("#treeDemo"),
+														setting, zNodes);
+
+												setQxCheck();
+
+											} else {
+												hmd
+														.popupErrorInfo(response.status);
+											}
+										})
+					}
+					
+					
+					
+					$scope.saveRole = function(role_Id) {
+
+						var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+						var nodes = treeObj.getCheckedNodes(true);
+						var nodesIds = "";
+						for ( var node in nodes) {
+
+							nodesIds += nodes[node].id + ",";
+						}
+
+						var data = {
+							roleId : role_Id,
+							quanxian_Ids : nodesIds
+						};
+
+						AdminService
+								.updatePrivilege(objToStr(data))
+								.success(
+										function(response) {
+											if (response.status == 1) {
+												alert("saveOk")
+												$("#userTitle").hide()
+
+											} else {
+												hmd
+														.popupErrorInfo(response.status);
+											}
+										})
+
+					}
+
+					$scope.quxiao = function() {
+						$("#userTitle").hide()
 					}
 
 				})

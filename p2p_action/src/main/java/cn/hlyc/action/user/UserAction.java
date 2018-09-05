@@ -11,7 +11,10 @@ import java.util.UUID;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -40,12 +43,16 @@ import cn.hlyc.utils.TokenUtil;
 @Namespace("/user")
 @Controller
 @Scope("prototype")
+@ParentPackage("customdefault")
+@InterceptorRefs(value = {
+		@InterceptorRef(value = "myStack")
+})
 public class UserAction extends BaseAction implements ModelDriven<UserModel> {
 	// 创建一个日志对象
 	private Logger log = Logger.getLogger(UserAction.class);
 
 	// 删除操作
-	@Action("del")
+	@Action(value="del")
 	public void del() {
 		String id = this.getRequest().getParameter("id");
 		// 调用service完成删除操作

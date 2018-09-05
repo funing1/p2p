@@ -28,7 +28,48 @@ angular
 							return $http.post(option.url.api_account + 'login',
 									$str, option.header);
 							// /p2p_action/account/login
+						},
+
+						quanxian : function($str) {
+
+							return $http.post(option.url.api_account
+									+ 'quanxian', $str, option.header);
+							// /p2p_action/account/login
+						},
+
+						findAllAdmin : function() {
+
+							return $http.post(option.url.api_account
+									+ 'findAllAdmin', option.header);
+
+						},
+
+						findAlljuese : function() {
+
+							return $http.post(option.url.api_account
+									+ 'findAlljuese', option.header);
+						
+						},
+						
+						findAllquanxian : function() {
+
+							return $http.post(option.url.api_account
+									+ 'findAllquanxian', option.header);
+						
+						},
+
+						updateRole : function($str) {
+							return $http.post(option.url.api_account + 'updateRole',
+									$str, option.header);
+						
+						},
+
+						updatePrivilege : function($str) {
+							return $http.post(option.url.api_account + 'updatePrivilege',
+									$str, option.header);
+						
 						}
+
 					}
 				})
 

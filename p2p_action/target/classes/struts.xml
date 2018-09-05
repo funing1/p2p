@@ -21,24 +21,46 @@
 	<package name="base" extends="json-default,struts-default">
 		<!-- 这里可以设置一些全局的返回值映射关系等 -->
 	</package>
-	
+
 	<package name="Struts2" extends="struts-default" namespace="/wj">
 
-		<action name="uploads" class="cn.hlyc.action.upload.UploadAction" method="upload">
+		<action name="uploads" class="cn.hlyc.action.upload.UploadAction"
+			method="upload">
 
 			<!-- 指定（限制）上传文件的类型，定义局部拦截器，修改默认拦截器的属性 "fileUpload.maximumSize" ：限制上传最大的文件大小。 
 				"fileUpload.allowedTypes"：允许上传文件的类型。 "fileUpload.allowedExtensions"：允许上传文件的可扩展文件类型。 -->
 			<interceptor-ref name="defaultStack">
 				<param name="fileUpload.maximumSize">500000000</param>
 				<param name="fileUpload.allowedTypes">image/bmp,image/png,image/gif,image/jpeg,image/jpg,image/png</param>
-				 
+
 			</interceptor-ref>
 
 		</action>
-		
-		<action name="cut" class="cn.hlyc.action.upload.UploadAction" method="cut"></action>
+
+		<action name="cut" class="cn.hlyc.action.upload.UploadAction"
+			method="cut"></action>
 	</package>
-	
-	
-	
+
+	<package name="customdefault" namespace="/" extends="struts-default">
+
+		<interceptors>
+
+			<interceptor name="fangfaInterceptor"
+				class="cn.hlyc.action.interceptor.HTintercetor" />
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="fangfaInterceptor">
+					<param name="includeMethods">regist,del,update,addProduct,delProduct,modifyProduct</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+
+		</interceptors>
+
+
+		<default-interceptor-ref name="myStack"> </default-interceptor-ref>
+		<global-results>
+			<result type="redirect" name="tologin">/quanxian.jsp</result>
+		</global-results>
+	</package>
+
 </struts>

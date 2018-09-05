@@ -11,7 +11,10 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.InterceptorRefs;
 import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,6 +33,11 @@ import cn.hlyc.utils.Response;
 @Controller
 @Scope("prototype")
 @Namespace("/product")
+@ParentPackage("customdefault")
+@InterceptorRefs(value = {
+		@InterceptorRef(value = "myStack")
+})
+
 public class ProductAction extends BaseAction implements ModelDriven<Product> {
 
 	private Product product = new Product();
@@ -68,6 +76,8 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		// 将proEarningRates转换成List<ProductEarningRate>
 		Map map = new JsonMapper().fromJson(proEarningRates, Map.class);
 		List<ProductEarningRate> pers = new ArrayList<ProductEarningRate>();
+		
+		if(map != null && map.isEmpty() && proEarningRates != null){
 		for (Object key : map.keySet()) {
 			// key就是月份 value就是利率值
 			ProductEarningRate per = new ProductEarningRate();
@@ -80,12 +90,21 @@ public class ProductAction extends BaseAction implements ModelDriven<Product> {
 		product.setProNum(UUID.randomUUID().toString());
 		// 调用service完成新增操作
 		productService.add(product);
-
+		
 		// 响应状态
 		try {
 			this.getResponse().getWriter().write(Response.build().setStatus(FrontStatusConstants.SUCCESS).toJSON());
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		}else{
+			try {
+				this.getResponse().getWriter().write(Response.build().setStatus(FrontStatusConstants.BREAK_DOWN).toJSON());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

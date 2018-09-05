@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style type="text/css">
+#divbody {
+	margin-left: 171px;
+}
+
+#quxiao{
+   margin-right: 50px;
+   background-color: #77DDFF;
+   margin-bottom: 17px;
+}
+
+#saveRole{
+    margin-right: 50px;
+   background-color: #77DDFF;
+   margin-bottom: 17px;
+}
+
+</style>
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div id="divbody">
+		<div id="Title_bar">
+			<div id="Title_bar_Head">
+				<div id="Title_Head"></div>
+				<div id="Title">
+					<!--页面标题-->
+					<img border="0" width="13" height="13"
+						src="styles/images2/images/title_arrow.gif" /> 角色管理
+				</div>
+				<div id="Title_End"></div>
+			</div>
+		</div>
+
+		<div id="MainArea">
+			<table cellspacing="0" cellpadding="0" class="TableStyle">
+
+				<!-- 表头-->
+				<thead>
+					<tr align=center valign=middle id=TableTitle>
+						<td width="100">用户名</td>
+						<td>相关操作</td>
+					</tr>
+				</thead>
+
+				<!--显示数据列表-->
+				<tbody id="TableData" class="dataContainer" datakey="userList">
+					
+						<tr class="TableDetail1 template" ng-repeat="a in ad">
+							<td>{{a.username}}</td>
+							<td style="display:none;">{{a.id}}</td>
+							<td align=center><a href="javascript:;" ng-click="sz(a.id,a.username)">设置角色</a></td>
+						</tr>
+					
+				</tbody>
+			</table>
+
+			<div class="ItemBlock_Title1" id="userTitle" style="display: none;">
+				
+
+				<!-- 表单内容显示 -->
+				<div class="ItemBlockBorder"
+					id="privilegeContent">
+					<div class="ItemBlock">
+						<table cellpadding="0" cellspacing="0" class="mainForm">
+							<tr align="LEFT" valign="MIDDLE" id="TableTitle">
+									<td width="300px" style="padding-left: 7px; text-align: center;" >
+										给用户&nbsp;&nbsp;{{admin_Name}}&nbsp;&nbsp;设置角色
+									</td>
+								</tr>
+
+							<!--显示数据列表-->
+							<tbody id="TableData">
+								<tr class="TableDetail1">
+									<!-- 显示权限树 -->
+									<td>
+										<ul id="treeDemo" class="ztree"></ul></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- 表单操作 -->
+				<div id="InputDetailBar">
+					<input type="button" value="保存" id="saveRole" ng-click="saveRole(admin_Id)"/><input type="button" value="取消" id="quxiao" ng-click="quxiao()"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
